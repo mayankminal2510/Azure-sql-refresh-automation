@@ -1,0 +1,1 @@
+# Azure-sql-refresh-automation
