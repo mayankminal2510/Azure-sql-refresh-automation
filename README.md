@@ -1,190 +1,200 @@
 # Azure-sql-refresh-automation
 
 **Azure SQL Automated Production to Dev Database Refresh**
+
 **Overview**
 
-This project provides an automated solution to refresh a development Azure SQL database from production on a scheduled basis. The solution removes the need for manual DBA intervention and ensures developers always have access to recent and secure data for testing and development.
+This project provides an ****automated solution to refresh a development Azure SQL database** from production on a scheduled basis**. The solution removes the need for manual DBA intervention and ensures developers always have access to recent and secure data for testing and development.
 
 The automation is implemented using Azure Automation Account and PowerShell scripts, making the workflow repeatable, reliable, and easy to maintain.
 
 In many environments, development teams frequently request fresh production copies for debugging or feature testing. Performing this manually can be time-consuming and inconsistent. This project solves that problem by providing a fully automated workflow.
 
-Key Features
+**Key Features**
 
-Automated daily refresh of development database from production
+•	Automated daily refresh of development database from production
 
-Built using Azure Automation Account
+•	Built using Azure Automation Account
 
-PowerShell based automation scripts
+•	PowerShell based automation scripts
 
-Automatically places the database in the correct Azure SQL Elastic Pool
+•	Automatically places the database in the correct Azure SQL Elastic Pool
 
-Removes production users and permissions
+•	Removes production users and permissions
 
-Creates development users and access roles
+•	Creates development users and access roles
 
-Scheduled execution with minimal DBA involvement
+•	Scheduled execution with minimal DBA involvement
 
-Fully script driven and easy to customize
+•	Fully script driven and easy to customize
 
-Architecture Overview
 
-The automation workflow performs the following steps:
+**Architecture Overview**
 
-Azure Automation Runbook triggers on schedule.
 
-PowerShell script connects to Azure subscription.
+                 +-----------------------+
+                 |  Azure Automation     |
+                 |      Runbook          |
+                 +-----------+-----------+
+                             |
+                             |
+                             v
+                 +-----------------------+
+                 |  Production Azure SQL |
+                 |      Database         |
+                 +-----------+-----------+
+                             |
+                             | Database Copy
+                             v
+                 +-----------------------+
+                 | Development Azure SQL |
+                 |       Server          |
+                 +-----------+-----------+
+                             |
+                             |
+                             v
+                 +-----------------------+
+                 |  Elastic Pool        |
+                 |  Dev Database        |
+                 +-----------+-----------+
+                             |
+                             |
+                             v
+                 +-----------------------+
+                 | Post Refresh Scripts  |
+                 | - Remove Prod Users   |
+                 | - Create Dev Users    |
+                 +-----------------------+
 
-Production database copy is created.
+**The automation workflow performs the following steps:**
 
-Database is restored or copied into the development environment.
+•	Azure Automation Runbook triggers on schedule.
 
-Database is added to the designated Elastic Pool.
+•	PowerShell script connects to Azure subscription.
 
-Post-deployment scripts run.
+•	Production database copy is created.
 
-Production users are removed.
+•	Database is restored or copied into the development environment.
 
-Development users and permissions are created.
+•	Database is added to the designated Elastic Pool.
 
-This ensures the development environment always starts with clean, secure, and recent data.
+•	Post-deployment scripts run.
 
-Automation Workflow
+•	Production users are removed.
+
+•	Development users and permissions are created.
+
+•	This ensures the development environment always starts with clean, secure, and recent data.
+
+
+**Automation Workflow**
 
 Daily process executed by the runbook:
 
-Authenticate to Azure using Automation Account identity.
+1.	Authenticate to Azure using Automation Account identity.
+2.	Identify the production Azure SQL database.
+3.	Create a database copy for development.
+4.	Place the copied database into the Elastic Pool.
+5.	Execute post-refresh configuration scripts.
+6.	Remove production users and roles.
+7.	Create development users and required permissions.
+8.	Validate database availability.
 
-Identify the production Azure SQL database.
 
-Create a database copy for development.
+**Technology Stack**
 
-Place the copied database into the Elastic Pool.
+•	Azure SQL Database
 
-Execute post-refresh configuration scripts.
+•	Azure Automation Account
 
-Remove production users and roles.
+•	PowerShell
 
-Create development users and required permissions.
+•	Azure PowerShell Modules
 
-Validate database availability.
+•	Azure Elastic Pools
 
-Technology Stack
 
-Azure SQL Database
+**Prerequisites**
 
-Azure Automation Account
 
-PowerShell
+**Before using this solution, ensure the following are configured:**
 
-Azure PowerShell Modules
 
-Azure Elastic Pools
+•	Azure Subscription access
 
-Repository Structure
+•	Azure SQL Server (Production)
 
-Example structure:
+•	Azure SQL Server (Development)
 
-/scripts
-    refresh-database.ps1
-    remove-prod-users.ps1
-    create-dev-users.ps1
+•	Elastic Pool in development environment
 
-/runbooks
-    database-refresh-runbook.ps1
+•	Azure Automation Account
 
-/docs
-    architecture-diagram.png
+•	Managed Identity or Service Principal permissions
 
-You can adjust this structure depending on your implementation.
+•	PowerShell Az modules installed in Automation Account
 
-Prerequisites
 
-Before using this solution, ensure the following are configured:
+**Required permissions typically include:**
 
-Azure Subscription access
 
-Azure SQL Server (Production)
+•	SQL DB Contributor
 
-Azure SQL Server (Development)
+•	SQL Server Contributor
 
-Elastic Pool in development environment
+•	Resource Group access
 
-Azure Automation Account
 
-Managed Identity or Service Principal permissions
+**Security Considerations**
 
-PowerShell Az modules installed in Automation Account
 
-Required permissions typically include:
+•	To maintain security between environments:
 
-SQL DB Contributor
+•	Production users are automatically removed from the development database.
 
-SQL Server Contributor
+•	Only development users and roles are recreated.
 
-Resource Group access
+•	Credentials are stored securely using Azure Automation variables or Key Vault.
 
-Security Considerations
+•	This prevents production accounts from existing in non-production environments.
 
-To maintain security between environments:
 
-Production users are automatically removed from the development database.
+**Benefits**
 
-Only development users and roles are recreated.
-
-Credentials are stored securely using Azure Automation variables or Key Vault.
-
-This prevents production accounts from existing in non-production environments.
-
-Benefits
 
 This automation provides several operational improvements:
 
-Eliminates repetitive manual DBA work
+•	Eliminates repetitive manual DBA work
 
-Ensures developers always have fresh production-like data
+•	Ensures developers always have fresh production-like data
 
-Improves development and testing accuracy
+•	Improves development and testing accuracy
 
-Reduces turnaround time for database refresh requests
+•	Reduces turnaround time for database refresh requests
 
-Enforces security practices across environments
+•	Enforces security practices across environments
 
-Creates a repeatable and reliable database refresh process
+•	Creates a repeatable and reliable database refresh process
 
-Use Cases
+
+**Use Cases**
 
 This solution is useful for:
 
-Development environment refresh
 
-QA environment preparation
+•	Development environment refresh
 
-Data troubleshooting
+•	QA environment preparation
 
-Feature testing with recent data
+•	Data troubleshooting
 
-Automated Dev/Test environment management
+•	Feature testing with recent data
 
-Future Enhancements
+•	Automated Dev/Test environment management
 
-Possible improvements:
+•	Future Enhancements
 
-Data masking for sensitive production data
 
-Notification integration (Teams / Email)
-
-Logging and monitoring
-
-Parameterized environment support
-
-CI/CD pipeline integration
-
-Contributions
-
-Contributions, suggestions, and improvements are welcome.
-Feel free to fork the repository and submit pull requests.
-
-Author
+**Author**
 
 Built by a SQL DBA focused on Azure SQL automation, database operations, and cloud database management.
