@@ -72,13 +72,13 @@ In many environments, development teams frequently request fresh production copi
 
 •	PowerShell script connects to Azure subscription.
 
-•	Production database copy is created.
+•	Drop Existing database on Dev and Production database copy is created.
 
 •	Database is restored or copied into the development environment.
 
 •	Database is added to the designated Elastic Pool.
 
-•	Post-deployment scripts run.
+•	Post-deployment scripts run. It will call pre defined store procedure where drop user scripts and create scripts are there.
 
 •	Production users are removed.
 
